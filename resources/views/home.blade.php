@@ -3,14 +3,16 @@
         Home
     </x-slot:title>
     <div class="max-w-2x1 mx-auto">
-        <div class="card bg-base-100 shadow mt-8">
-            <div class="card-body">
-                <div>
-                    <h1 class="text-3x1 font-bold">Welcome to Chirper! </h1>
-                    <p class="mt-4 text-base-content/60">Esta es tu nueva marca de aplicación Laravel. Es tiempo de
-                        hacerlo cantar</p>
+        @foreach ($chirps as $chirp)
+            <div class="card bg-base-100 shadow mt-8">
+                <div class="card-body">
+                    <div>
+                        <div class="font-semibold">{{ $chirp['autor'] }}</div>
+                        <div class="mt-1">{{ $chirp['mensaje'] }}</div>
+                        <div class="text-sm text-gray-500 mt-2">{{ $chirp['tiempo'] }}</div>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endforeach
     </div>
 </x-layout>
