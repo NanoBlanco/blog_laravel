@@ -31,7 +31,19 @@ class ChirpController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'mensaje' => 'required|string|max:250|min:5',
+        ],[
+            'mensaje.required' => 'Debe ingresar un mensaje',
+            'mensaje.max' => 'El mensaje debe ser máximo de 250 caracteres',
+            'mensaje.min' => 'El mensaje debe tener al menos 5 caracteres'
+        ]);
+
+        Chirp::create([
+            'mensaje' => $validated['mensaje'],
+        ]);
+
+        return redirect('/')->with('success','Tu mensaje ha sido mostrado!');
     }
 
     /**
@@ -45,24 +57,36 @@ class ChirpController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Chirp $chirp)
     {
-        //
+        return view('chirps.edit', compact('chirp'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Chirp $chirp)
     {
-        //
+        $validated = $request->validate([
+            'mensaje' => 'required|string|max:250|min:5',
+        ], [
+            'mensaje.required' => 'Debe ingresar un mensaje',
+            'mensaje.max' => 'El mensaje debe ser máximo de 250 caracteres',
+            'mensaje.min' => 'El mensaje debe tener al menos 5 caracteres'
+        ]);
+
+        $chirp->update($validated);
+
+        return redirect('/')->with('success', 'Tu mensaje ha sido actualizado!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Chirp $chirp)
     {
-        //
+        $chirp->delete();
+
+        return redirect('/')->with('success', 'Tu mensaje ha sido eliminado!');
     }
 }

@@ -19,11 +19,25 @@
                 </div>
             @endif
 
-            <div class="min-w-0">
-                <div class="flex items-center gap-1">
-                    <span class="font-semibold text-sm">{{ $chirp->user ? $chirp->user->name : 'Anónimo' }}</span>
-                    <span class="text-base-content/60">.</span>
-                    <span class="text-sm text-base-content/60">{{ $chirp->created_at->diffForHumans() }}</span>
+            <div class="min-w-0 flex-1">
+                <div class="flex justify-between w-full">
+                    <div class="flex items-center gap-1">
+                        <span class="font-semibold text-sm">{{ $chirp->user ? $chirp->user->name : 'Anónimo' }}</span>
+                        <span class="text-base-content/60">.</span>
+                        <span class="text-sm text-base-content/60">{{ $chirp->created_at->diffForHumans() }}</span>
+                        @if ($chirp->updated_at->gt($chirp->created_at->addSeconds(5)))
+                            <span class="text-base-content/60">.</span>
+                            <span class="text-sm text-base-content/60 italic">editado</span>
+                        @endif
+                    </div>
+                    <div class="flex gap-1">
+                        <a href="/chirps/{{ $chirp->id }}/edit" class="btn btn-ghost btn-xs">Edit</a>
+                        <form action="/chirps/{{ $chirp->id }}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" onclick="return confirm('Estás seguro de borrarlo?')">Delete</button>
+                        </form>
+                    </div>
                 </div>
                 <p class="mt-1">{{ $chirp->mensaje }}</p>
             </div>
