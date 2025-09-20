@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chirp;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class ChirpController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -39,9 +41,7 @@ class ChirpController extends Controller
             'mensaje.min' => 'El mensaje debe tener al menos 5 caracteres'
         ]);
 
-        Chirp::create([
-            'mensaje' => $validated['mensaje'],
-        ]);
+        auth()->user()->chirps()->create($validated);
 
         return redirect('/')->with('success','Tu mensaje ha sido mostrado!');
     }
@@ -59,6 +59,8 @@ class ChirpController extends Controller
      */
     public function edit(Chirp $chirp)
     {
+        $this->authorize('update', $chirp);
+
         return view('chirps.edit', compact('chirp'));
     }
 
@@ -67,6 +69,8 @@ class ChirpController extends Controller
      */
     public function update(Request $request, Chirp $chirp)
     {
+        $this->authorize('update', $chirp);
+
         $validated = $request->validate([
             'mensaje' => 'required|string|max:250|min:5',
         ], [
@@ -85,6 +89,8 @@ class ChirpController extends Controller
      */
     public function destroy(Chirp $chirp)
     {
+        $this->authorize('destroy', $chirp);
+
         $chirp->delete();
 
         return redirect('/')->with('success', 'Tu mensaje ha sido eliminado!');

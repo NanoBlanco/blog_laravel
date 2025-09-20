@@ -30,14 +30,23 @@
                             <span class="text-sm text-base-content/60 italic">editado</span>
                         @endif
                     </div>
-                    <div class="flex gap-1">
-                        <a href="/chirps/{{ $chirp->id }}/edit" class="btn btn-ghost btn-xs">Edit</a>
-                        <form action="/chirps/{{ $chirp->id }}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('Estás seguro de borrarlo?')">Delete</button>
-                        </form>
-                    </div>
+                    @if (auth()->check() && auth()->id() === $chirp->user_id)
+                        <!-- Edit/Delete Buttons -->
+                        <div class="flex gap-1">
+                            <a href="/chirps/{{ $chirp->id }}/edit" class="btn btn-ghost btn-xs">
+                                Edit
+                            </a>
+                            <form action="/chirps/{{ $chirp->id }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-ghost btn-xs text-error"
+                                    onclick="return confirm('Estás seguro de borrarlo?')">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+
                 </div>
                 <p class="mt-1">{{ $chirp->mensaje }}</p>
             </div>
